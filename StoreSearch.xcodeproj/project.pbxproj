@@ -14,6 +14,7 @@
 		219BC1A219F732A100D8642B /* StoreSearchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 219BC1A119F732A100D8642B /* StoreSearchTests.m */; };
 		219BC1AE19F7337900D8642B /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 219BC1AC19F7337900D8642B /* SearchViewController.m */; };
 		219BC1AF19F7337900D8642B /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 219BC1AD19F7337900D8642B /* SearchViewController.xib */; };
+		219D058E19F886D3007D727A /* SearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 219D058D19F886D3007D727A /* SearchResult.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		219BC1AB19F7337900D8642B /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchViewController.h; path = ../SearchViewController.h; sourceTree = "<group>"; };
 		219BC1AC19F7337900D8642B /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchViewController.m; path = ../SearchViewController.m; sourceTree = "<group>"; };
 		219BC1AD19F7337900D8642B /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SearchViewController.xib; path = ../SearchViewController.xib; sourceTree = "<group>"; };
+		219D058D19F886D3007D727A /* SearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResult.m; sourceTree = "<group>"; };
+		219D059119F8872E007D727A /* SearchResult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchResult.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 				219BC1AB19F7337900D8642B /* SearchViewController.h */,
 				219BC1AC19F7337900D8642B /* SearchViewController.m */,
 				219BC1AD19F7337900D8642B /* SearchViewController.xib */,
+				219D059119F8872E007D727A /* SearchResult.h */,
+				219D058D19F886D3007D727A /* SearchResult.m */,
 				219BC19219F732A100D8642B /* Images.xcassets */,
 				219BC19419F732A100D8642B /* LaunchScreen.xib */,
 				219BC18519F732A100D8642B /* Supporting Files */,
@@ -221,6 +226,7 @@
 			files = (
 				219BC18B19F732A100D8642B /* AppDelegate.m in Sources */,
 				219BC1AE19F7337900D8642B /* SearchViewController.m in Sources */,
+				219D058E19F886D3007D727A /* SearchResult.m in Sources */,
 				219BC18819F732A100D8642B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,6 +410,7 @@
 				219BC1A719F732A100D8642B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		219BC1A819F732A100D8642B /* Build configuration list for PBXNativeTarget "StoreSearchTests" */ = {
 			isa = XCConfigurationList;
@@ -412,6 +419,7 @@
 				219BC1AA19F732A100D8642B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
