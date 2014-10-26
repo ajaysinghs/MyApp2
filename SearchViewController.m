@@ -11,6 +11,11 @@
 
 #import "SearchResult.h"
 
+#import "SearchResultCell.h"
+
+static NSString * const SearchResultCellIdentifier = @"SearchResultCell";
+
+static NSString * const NothingFoundCellIdentifier = @"NothingFoundCell";
 
 
 
@@ -35,9 +40,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
     // first row will always be visible, and when you scroll the table view the cells still go under the search bar.
     self.tableView.contentInset =  UIEdgeInsetsMake(64, 0, 0, 0);
+    
+    
+    //to have a nib for this cell
+    UINib *cellnib = [UINib nibWithNibName:SearchResultCellIdentifier bundle:nil];
+    
+    [self.tableView registerNib:cellnib forCellReuseIdentifier:SearchResultCellIdentifier];
+    
+    self.tableView.rowHeight = 80;
+    
+    
+    //nib for Nothing found Cell
+    cellnib = [UINib nibWithNibName:NothingFoundCellIdentifier bundle:nil];
+    
+    [self.tableView registerNib:cellnib forCellReuseIdentifier:NothingFoundCellIdentifier];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -65,33 +84,19 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"SearchResultCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        
-    }
-    
+   
     if ([_searchResults count] == 0) {
-        
-        cell.textLabel.text = @"Nothing Found";
-        
-        cell.detailTextLabel.text = @"";
+        return [tableView dequeueReusableCellWithIdentifier:NothingFoundCellIdentifier forIndexPath:indexPath];
     }
-    
-    else{
-    
-    SearchResult *searchResult = _searchResults[indexPath.row];
-    
-    cell.textLabel.text = searchResult.name;
-    
-    cell.detailTextLabel.text = searchResult.artistName;
-    
-    }
-    
+    else {
+        SearchResultCell *cell = (SearchResultCell *)[tableView dequeueReusableCellWithIdentifier:SearchResultCellIdentifier forIndexPath:indexPath];
+        SearchResult *searchResult = _searchResults[indexPath.row];
+        cell.nameLabel.text = searchResult.name;
+        cell.artistNameLabel.text = searchResult.artistName;
+
+
     return cell;
+    }
     
 }
 
@@ -129,7 +134,7 @@
     _searchResults = [[NSMutableArray alloc] initWithCapacity:10];
     
     if (![searchBar.text isEqualToString:@"justin bieber"]) {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
         
         SearchResult *searchResult= [[SearchResult alloc] init];
         
