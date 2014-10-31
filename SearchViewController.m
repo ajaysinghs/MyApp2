@@ -8,10 +8,13 @@
 
 #import "SearchViewController.h"
 
-
 #import "SearchResult.h"
 
 #import "SearchResultCell.h"
+
+
+#import <AFNetworking/AFNetworking.h>
+
 
 static NSString * const SearchResultCellIdentifier = @"SearchResultCell";
 
@@ -37,7 +40,22 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     NSMutableArray *_searchResults;
     
     BOOL _isLoading;
+    
+    NSOperationQueue *_queue;
 }
+
+
+//Intializing NSOperationQueue
+-(id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nil];
+    
+    if (self) {
+        _queue = [[NSOperationQueue alloc] init];
+    }
+    return self;
+}
+
 
 
 
@@ -216,44 +234,72 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
             
             NSURL *url = [self urlWithSearchText:searchBar.text];
             
-            NSString *jsonString = [self performStoreRequestWithURL:url];
+            
+            //Apppying AFNetworking Library
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            
+            AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+            
+            operation.responseSerializer = [AFJSONResponseSerializer serializer];
+            
+            [operation setCompletionBlockWithSuccess:^
+                  (AFHTTPRequestOperation *operation, id responseObject) {
+                      [self parseDictionary:responseObject];
+                      [_searchResults sortUsingSelector:@selector(compareName:)];
+                      _isLoading = NO;
+                      [self.tableView reloadData];
+                 NSLog(@"Success! %@", responseObject);
+               }
+                 failure:^(AFHTTPRequestOperation *operation, NSError *error){
+                     [self showNetworkError];
+                     _isLoading = NO;
+                     [self.tableView reloadData];
+                  NSLog(@"Failure! %@", error);
+                 }];
+            
+            [_queue addOperation:operation];
+            
+            
+            
+            
+            //NSString *jsonString = [self performStoreRequestWithURL:url];
             
             //If something goes wrong, you call the showNetworkError method to show an alert box
-            if (jsonString == nil) {
-                 // putting Alert message in main tread via main queue since it will be on UI
-                dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self showNetworkError];
-                });
-                return;
-            }
-        
-            NSDictionary *dictionary = [self parseJSON:jsonString];
-            
-            //If something goes wrong, you call the showNetworkError method to show an alert box
-            if (dictionary == nil) {
-                // putting Alert message in main tread via main queue since it will be on UI
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showNetworkError];
-                    });
-                return;
-              }
-        
-        
-            [self parseDictionary:dictionary];
+//            if (jsonString == nil) {
+//                 // putting Alert message in main tread via main queue since it will be on UI
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                
+//                [self showNetworkError];
+//                });
+//                return;
+//            }
+//        
+//            NSDictionary *dictionary = [self parseJSON:jsonString];
+//            
+//            //If something goes wrong, you call the showNetworkError method to show an alert box
+//            if (dictionary == nil) {
+//                // putting Alert message in main tread via main queue since it will be on UI
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [self showNetworkError];
+//                    });
+//                return;
+//              }
+//        
+//        
+//            [self parseDictionary:dictionary];
             
             //for sorting
-            [_searchResults sortUsingSelector:@selector(compareName:)];
-            
-            NSLog(@"DONE!");
+//            [_searchResults sortUsingSelector:@selector(compareName:)];
+//            
+//            NSLog(@"DONE!");
 
        
-        //Putting reload tableview in main tread via main queue since it will be in UI
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _isLoading = NO;
-            [self.tableView reloadData];
+//        //Putting reload tableview in main tread via main queue since it will be in UI
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            _isLoading = NO;
+//            [self.tableView reloadData];
         });
-      });
     }
 }
     
@@ -272,40 +318,40 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 }
 
 
-- (NSString *)performStoreRequestWithURL:(NSURL *)url
-{
-    NSError *error;
-    
-    NSString *resultString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
-    
-    if (resultString == nil) {
-        
-        NSLog(@"Download Error: %@", error);
-        
-        return nil;
-    }
-    return resultString;
-}
+//- (NSString *)performStoreRequestWithURL:(NSURL *)url
+//{
+//    NSError *error;
+//    
+//    NSString *resultString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+//    
+//    if (resultString == nil) {
+//        
+//        NSLog(@"Download Error: %@", error);
+//        
+//        return nil;
+//    }
+//    return resultString;
+//}
 
 
-- (NSDictionary *)parseJSON:(NSString *)jsonString
-{
-    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSError *error;
-    
-    id resultObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-    
-
-    // to check that the object returned by NSJSONSerialization is truly an NSDictionary
-        if (![resultObject isKindOfClass:[NSDictionary class]]) {
-            
-            NSLog(@"JSON Error: Expected dictionary");
-            
-            return nil;
-        }
-    return resultObject;
-}
+//- (NSDictionary *)parseJSON:(NSString *)jsonString
+//{
+//    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+//    
+//    NSError *error;
+//    
+//    id resultObject = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+//    
+//
+//    // to check that the object returned by NSJSONSerialization is truly an NSDictionary
+//        if (![resultObject isKindOfClass:[NSDictionary class]]) {
+//            
+//            NSLog(@"JSON Error: Expected dictionary");
+//            
+//            return nil;
+//        }
+//    return resultObject;
+//}
 
 
 - (void)parseDictionary:(NSDictionary *)dictionary
