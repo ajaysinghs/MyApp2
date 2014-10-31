@@ -7,6 +7,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchViewController">
             <connections>
                 <outlet property="searchBar" destination="VKU-GV-0Do" id="gb8-O4-Nwq"/>
+                <outlet property="segmentedControl" destination="shb-Lu-1jo" id="iPT-zx-751"/>
                 <outlet property="tableView" destination="pyz-LQ-5py" id="AjJ-CK-wWY"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -34,6 +35,29 @@
                         <outlet property="delegate" destination="-1" id="6KY-ZH-S3d"/>
                     </connections>
                 </tableView>
+                <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rfH-AS-GVn">
+                    <rect key="frame" x="0.0" y="65" width="600" height="44"/>
+                    <items>
+                        <navigationItem id="XOW-bH-8vJ">
+                            <nil key="title"/>
+                            <barButtonItem key="leftBarButtonItem" style="plain" id="woL-ZX-ahK">
+                                <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" id="shb-Lu-1jo">
+                                    <rect key="frame" x="162.5" y="3" width="275" height="38"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <segments>
+                                        <segment title="All"/>
+                                        <segment title="Music"/>
+                                        <segment title="Software"/>
+                                        <segment title="E-Books"/>
+                                    </segments>
+                                    <connections>
+                                        <action selector="segmentChanged:" destination="-1" eventType="valueChanged" id="8lg-NA-DtF"/>
+                                    </connections>
+                                </segmentedControl>
+                            </barButtonItem>
+                        </navigationItem>
+                    </items>
+                </navigationBar>
                 <searchBar contentMode="redraw" fixedFrame="YES" text="" placeholder="App name, artist, song, album, ebook" translatesAutoresizingMaskIntoConstraints="NO" id="VKU-GV-0Do">
                     <rect key="frame" x="0.0" y="21" width="600" height="44"/>
                     <textInputTraits key="textInputTraits"/>
@@ -49,6 +73,7 @@
                 <constraint firstItem="pyz-LQ-5py" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="YiA-3E-1Ik"/>
                 <constraint firstAttribute="trailing" secondItem="pyz-LQ-5py" secondAttribute="trailing" id="kUS-e6-LPq"/>
             </constraints>
+            <point key="canvasLocation" x="-1346.5" y="-276"/>
         </view>
     </objects>
 </document>

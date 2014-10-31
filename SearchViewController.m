@@ -30,6 +30,9 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 
+@property (nonatomic, weak) IBOutlet UISegmentedControl *segmentedControl;
+
+
 
 @end
 
@@ -63,7 +66,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     [super viewDidLoad];
     
     // first row will always be visible, and when you scroll the table view the cells still go under the search bar.
-    self.tableView.contentInset =  UIEdgeInsetsMake(64, 0, 0, 0);
+    self.tableView.contentInset =  UIEdgeInsetsMake(108, 0, 0, 0);
     
     
     //nib for Search Result cell
@@ -215,12 +218,19 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 
 #pragma mark - UISearchBarDelegate
 
--(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    if ([searchBar.text length] > 0) {
-    [searchBar resignFirstResponder];
+    [self performSearch];
+}
+
+
+
+-(void)performSearch
+{
+    if ([self.searchBar.text length] > 0) {
+    [self.searchBar resignFirstResponder];
         
-        //to cancel all current operations if user start searching for another search
+        //cancelAllOperations you make sure that no old searches can ever get in the way of the new search.
         [_queue cancelAllOperations];
     
         _isLoading = YES;
@@ -235,10 +245,10 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
         
         dispatch_async(queue, ^{
             
-            NSURL *url = [self urlWithSearchText:searchBar.text];
+            NSURL *url = [self urlWithSearchText:self.searchBar.text category:self.segmentedControl.selectedSegmentIndex];
             
             
-            //Apppying AFNetworking Library
+            //Implementing AFNetworking Library
             
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
             
@@ -255,7 +265,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
                  NSLog(@"Success! %@", responseObject);
                }
                  failure:^(AFHTTPRequestOperation *operation, NSError *error){
-                      //to prevent the app from showing an error message if user cancel the searching 
+                      //to prevent the app from showing an error message if user cancel the searching
                      if (operation.isCancelled) {
                          return;
                      }
@@ -312,12 +322,25 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     
 
 
-- (NSURL *)urlWithSearchText:(NSString *)searchText
+- (NSURL *)urlWithSearchText:(NSString *)searchText category:(NSInteger)category
 {
+    NSString *categoryName;
+    switch (category) {
+            case 0: categoryName = @"";
+            break;
+            case 1: categoryName = @"musicTrack";
+            break;
+            case 2: categoryName = @"software";
+            break;
+            case 3: categoryName = @"ebook";
+            break;
+    }
+    
+    
     // to handle spaces in URL
     NSString *escapedSearchText = [searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://itunes.apple.com/search?term=%@",escapedSearchText];
+    NSString *urlString = [NSString stringWithFormat:@"http://itunes.apple.com/search?term=%@&limit=200&entity=%@",escapedSearchText, categoryName];
     
     NSURL *url = [NSURL URLWithString:urlString];
     
@@ -489,6 +512,16 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 {
     return UIBarPositionTopAttached;
 }
+
+
+- (IBAction)segmentChanged:(UISegmentedControl *)sender
+{
+   if (_searchResults != nil) {
+       [self performSearch];
+    }
+}
+
+
 
 
 
