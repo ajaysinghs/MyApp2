@@ -219,6 +219,9 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 {
     if ([searchBar.text length] > 0) {
     [searchBar resignFirstResponder];
+        
+        //to cancel all current operations if user start searching for another search
+        [_queue cancelAllOperations];
     
         _isLoading = YES;
         [self.tableView reloadData];
@@ -252,6 +255,10 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
                  NSLog(@"Success! %@", responseObject);
                }
                  failure:^(AFHTTPRequestOperation *operation, NSError *error){
+                      //to prevent the app from showing an error message if user cancel the searching 
+                     if (operation.isCancelled) {
+                         return;
+                     }
                      [self showNetworkError];
                      _isLoading = NO;
                      [self.tableView reloadData];
