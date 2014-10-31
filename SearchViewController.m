@@ -48,7 +48,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     self.tableView.contentInset =  UIEdgeInsetsMake(64, 0, 0, 0);
     
     
-    //to have a nib for this cell
+    //nib for Search Result cell
     UINib *cellnib = [UINib nibWithNibName:SearchResultCellIdentifier bundle:nil];
     [self.tableView registerNib:cellnib forCellReuseIdentifier:SearchResultCellIdentifier];
     
@@ -256,7 +256,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
       });
     }
 }
-
+    
 
 
 - (NSURL *)urlWithSearchText:(NSString *)searchText
