@@ -12,8 +12,11 @@
 
 #import "SearchResultCell.h"
 
-
 #import <AFNetworking/AFNetworking.h>
+
+#import "DetailViewController.h"
+
+
 
 
 static NSString * const SearchResultCellIdentifier = @"SearchResultCell";
@@ -198,6 +201,16 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    DetailViewController *controller = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    
+    
+    //Using the view controller containment APIs to embed the DetailViewController “inside” the SearchViewController.
+    [self.view addSubview:controller.view];
+    
+    [self addChildViewController:controller];
+    
+    [controller didMoveToParentViewController:self];
 }
 
 
