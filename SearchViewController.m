@@ -141,59 +141,14 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
         
         SearchResult *searchResult = _searchResults[indexPath.row];
         
-        cell.nameLabel.text = searchResult.name;
-        
-        NSString *artistName = searchResult.artistName;
-        
-        if (artistName == nil) {
-            artistName = @"Unknown";
-        }
-        
-        NSString *kind = [self kindForDisplay:searchResult.kind];
-        
-        cell.artistNameLabel.text = [NSString stringWithFormat:@"%@ (%@)", artistName, kind];
+        [cell configureForSearchResult:searchResult];
 
     return cell;
     }
     
 }
 
-- (NSString *)kindForDisplay:(NSString *)kind
-{
-    if ([kind isEqualToString:@"album"]) {
-        return @"Album";
-        }
-    else if ([kind isEqualToString:@"audiobook"]) {
-        return @"Audio Book";
-        }
-    else if ([kind isEqualToString:@"book"]) {
-        return @"Book";
-        }
-    else if ([kind isEqualToString:@"ebook"]) {
-        return @"E-Book";
-        }
-    else if ([kind isEqualToString:@"feature-movie"]) {
-        return @"Movie";
-        }
-    else if ([kind isEqualToString:@"music-video"]) {
-        return @"Music Video";
-        }
-    else if ([kind isEqualToString:@"podcast"]) {
-        return @"Podcast";
-        }
-    else if ([kind isEqualToString:@"software"]) {
-        return @"App";
-        }
-    else if ([kind isEqualToString:@"song"]) {
-        return @"Song";
-        }
-    else if ([kind isEqualToString:@"tv-episode"]) {
-        return @"TV Episode";
-        }
-    else {
-        return kind;
-    }
-}
+
 
 #pragma mark - UITableViewDelegate
 
@@ -203,6 +158,15 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     DetailViewController *controller = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    
+    
+    // to set the properties of Detail View Controller
+    SearchResult *searchResult = _searchResults[indexPath.row];
+    controller.searchResult = searchResult;
+    
+    
+    //Before you add its view to the window,  resize it to the proper dimensions (e.g After you instantiate the DetailViewController it always has a view that is 568 points high, even on a 3.5-inch device.)
+    controller.view.frame = self.view.frame;
     
     
     //Using the view controller containment APIs to embed the DetailViewController “inside” the SearchViewController.
@@ -275,7 +239,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
                       [_searchResults sortUsingSelector:@selector(compareName:)];
                       _isLoading = NO;
                       [self.tableView reloadData];
-                 NSLog(@"Success! %@", responseObject);
+                 //NSLog(@"Success! %@", responseObject);
                }
                  failure:^(AFHTTPRequestOperation *operation, NSError *error){
                       //to prevent the app from showing an error message if user cancel the searching
