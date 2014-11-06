@@ -167,17 +167,17 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     SearchResult *searchResult = _searchResults[indexPath.row];
     controller.searchResult = searchResult;
     
-    
-    //Before you add its view to the window,  resize it to the proper dimensions (e.g After you instantiate the DetailViewController it always has a view that is 568 points high, even on a 3.5-inch device.)
-    controller.view.frame = self.view.frame;
+    [controller presentInParentViewController:self];
     
     
-    //Using the view controller containment APIs to embed the DetailViewController “inside” the SearchViewController.
-    [self.view addSubview:controller.view];
+//    //Before you add its view to the window,  resize it to the proper dimensions (e.g After you instantiate the DetailViewController it always has a view that is 568 points high, even on a 3.5-inch device.)
+//    controller.view.frame = self.view.frame;
+//    //Using the view controller containment APIs to embed the DetailViewController “inside” the SearchViewController.
+//    [self.view addSubview:controller.view];
+//    [self addChildViewController:controller];
+//    [controller didMoveToParentViewController:self];
     
-    [self addChildViewController:controller];
     
-    [controller didMoveToParentViewController:self];
 }
 
 
