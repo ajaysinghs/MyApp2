@@ -39,6 +39,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    
+    //for Gradient not to be so dark
+    self.view.backgroundColor = [UIColor clearColor];
+    
     //stretchable image for Button
     UIImage *image = [[UIImage imageNamed:@"PriceButton"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
     
@@ -64,6 +69,7 @@
     if (self.searchResult != nil) {
         [self updateUI];
     }
+    
 }
 
 - (void)updateUI

@@ -19,6 +19,7 @@
 		21A152BA1A01C97400082FAC /* LoadingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21A152B91A01C97400082FAC /* LoadingCell.xib */; };
 		21A152C01A07001000082FAC /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A152BE1A07001000082FAC /* DetailViewController.m */; };
 		21A152C11A07001000082FAC /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21A152BF1A07001000082FAC /* DetailViewController.xib */; };
+		21A152C41A0B011000082FAC /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 21A152C31A0B011000082FAC /* GradientView.m */; };
 		21CFDC8419FD4C64007BE7E6 /* SearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21CFDC8319FD4C64007BE7E6 /* SearchResultCell.xib */; };
 		21CFDC8919FD5D79007BE7E6 /* SearchResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CFDC8819FD5D79007BE7E6 /* SearchResultCell.m */; };
 		21CFDC8B19FD62DF007BE7E6 /* NothingFoundCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21CFDC8A19FD62DF007BE7E6 /* NothingFoundCell.xib */; };
@@ -56,6 +57,8 @@
 		21A152BD1A07001000082FAC /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		21A152BE1A07001000082FAC /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		21A152BF1A07001000082FAC /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
+		21A152C21A0B011000082FAC /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientView.h; sourceTree = "<group>"; };
+		21A152C31A0B011000082FAC /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientView.m; sourceTree = "<group>"; };
 		21CFDC8319FD4C64007BE7E6 /* SearchResultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultCell.xib; sourceTree = "<group>"; };
 		21CFDC8719FD5D79007BE7E6 /* SearchResultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultCell.h; sourceTree = "<group>"; };
 		21CFDC8819FD5D79007BE7E6 /* SearchResultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultCell.m; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				21A152BD1A07001000082FAC /* DetailViewController.h */,
 				21A152BE1A07001000082FAC /* DetailViewController.m */,
 				21A152BF1A07001000082FAC /* DetailViewController.xib */,
+				21A152C21A0B011000082FAC /* GradientView.h */,
+				21A152C31A0B011000082FAC /* GradientView.m */,
 				219BC19219F732A100D8642B /* Images.xcassets */,
 				219BC19419F732A100D8642B /* LaunchScreen.xib */,
 				219BC18519F732A100D8642B /* Supporting Files */,
@@ -314,6 +319,7 @@
 				21CFDC8919FD5D79007BE7E6 /* SearchResultCell.m in Sources */,
 				219D058E19F886D3007D727A /* SearchResult.m in Sources */,
 				219BC18819F732A100D8642B /* main.m in Sources */,
+				21A152C41A0B011000082FAC /* GradientView.m in Sources */,
 				21A152C01A07001000082FAC /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
