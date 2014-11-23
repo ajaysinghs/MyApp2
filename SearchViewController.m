@@ -538,6 +538,9 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     if (_landscapeViewController == nil) {
         _landscapeViewController = [[LandscapeViewController alloc] initWithNibName:@"LandscapeViewController"  bundle:nil];
         
+        //to assign array objects to LandscapeViewController
+        _landscapeViewController.searchResults = _searchResults;
+        
         _landscapeViewController.view.frame = self.view.bounds;
         
         _landscapeViewController.view.alpha = 0.0f;
@@ -545,11 +548,10 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
        
         [self.view addSubview:_landscapeViewController.view];
         [self addChildViewController:_landscapeViewController];
-        [_landscapeViewController didMoveToParentViewController:self];
-        
+
         
         [UIView animateWithDuration:duration animations:^{
-            _landscapeViewController.view.alpha = 0.1f;
+            _landscapeViewController.view.alpha = 1.0f;
             // for barstyle color change
             _statusBarStyle = UIStatusBarStyleLightContent;
             [self setNeedsStatusBarAppearanceUpdate];
@@ -560,7 +562,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
         
         [self.searchBar resignFirstResponder];
         
-        [_detailViewController dismissFromParentViewControllerWithAnimationType:DetailViewControllerAnimationTypeSlide];
+        [_detailViewController dismissFromParentViewControllerWithAnimationType:DetailViewControllerAnimationTypeFade];
         
     }
 }
