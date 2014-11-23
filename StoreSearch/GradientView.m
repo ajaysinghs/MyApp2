@@ -14,6 +14,8 @@
 {
     if ((self = [super initWithFrame:frame])) {
         self.backgroundColor = [UIColor clearColor];
+        //to handle rotation
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
     return self;
 }

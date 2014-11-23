@@ -16,6 +16,11 @@
 
 #import "DetailViewController.h"
 
+#import "LandscapeViewController.h"
+
+
+
+
 
 
 
@@ -48,6 +53,12 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     BOOL _isLoading;
     
     NSOperationQueue *_queue;
+    
+    LandscapeViewController *_landscapeViewController;
+    
+    UIStatusBarStyle _statusBarStyle;
+    
+     __weak DetailViewController *_detailViewController;
 }
 
 
@@ -89,6 +100,8 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     [self.tableView registerNib:cellnib forCellReuseIdentifier:LoadingCellIdentifier];
     
     [self.searchBar becomeFirstResponder];
+    
+    _statusBarStyle = UIStatusBarStyleDefault;
     
 }
 
@@ -168,6 +181,9 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     controller.searchResult = searchResult;
     
     [controller presentInParentViewController:self];
+    
+    //to dismiss detailviewcontroller in landscape mode
+    _detailViewController = controller;
     
     
 //    //Before you add its view to the window,  resize it to the proper dimensions (e.g After you instantiate the DetailViewController it always has a view that is 568 points high, even on a 3.5-inch device.)
@@ -502,6 +518,86 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 }
 
 
+//change to landscapemode
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        
+       [self hideLandscapeViewWithDuration:duration];
+    }
+    else{
+        [self showLandscapeViewWithDuration:duration];
+    }
+}
+
+
+- (void)showLandscapeViewWithDuration:(NSTimeInterval)duration
+{
+    if (_landscapeViewController == nil) {
+        _landscapeViewController = [[LandscapeViewController alloc] initWithNibName:@"LandscapeViewController"  bundle:nil];
+        
+        _landscapeViewController.view.frame = self.view.bounds;
+        
+        _landscapeViewController.view.alpha = 0.0f;
+       
+       
+        [self.view addSubview:_landscapeViewController.view];
+        [self addChildViewController:_landscapeViewController];
+        [_landscapeViewController didMoveToParentViewController:self];
+        
+        
+        [UIView animateWithDuration:duration animations:^{
+            _landscapeViewController.view.alpha = 0.1f;
+            // for barstyle color change
+            _statusBarStyle = UIStatusBarStyleLightContent;
+            [self setNeedsStatusBarAppearanceUpdate];
+            
+        } completion:^(BOOL finished){
+            [_landscapeViewController didMoveToParentViewController:self];
+        }];
+        
+        [self.searchBar resignFirstResponder];
+        
+        [_detailViewController dismissFromParentViewControllerWithAnimationType:DetailViewControllerAnimationTypeSlide];
+        
+    }
+}
+
+    
+    
+    
+- (void)hideLandscapeViewWithDuration:(NSTimeInterval)duration
+{
+    if (_landscapeViewController != nil) {
+        [_landscapeViewController willMoveToParentViewController:nil];
+        
+        [UIView animateWithDuration:duration animations:^{
+            _landscapeViewController.view.alpha = 0.0f;
+            
+            //// for barstyle color change
+            _statusBarStyle = UIStatusBarStyleDefault;
+            [self setNeedsStatusBarAppearanceUpdate];
+            
+        } completion:^(BOOL finished){
+            [_landscapeViewController.view removeFromSuperview];
+            [_landscapeViewController removeFromParentViewController];
+            _landscapeViewController = nil;
+            
+        }];
+       
+    }
+}
+
+
+//to determine what color to make the status bar when mode changed from portait to landscape
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _statusBarStyle;
+}
+
 
 
 
@@ -515,4 +611,16 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 }
 */
 
+
+
+    
 @end
+
+
+
+
+
+
+
+
+
