@@ -233,6 +233,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
                                 if (!success) {
                                     [self showNetworkError];
                                 }
+                                [_landscapeViewController searchResultsReceived];
                                 [self.tableView reloadData];
                             }];
     
