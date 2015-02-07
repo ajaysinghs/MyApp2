@@ -14,6 +14,8 @@
 
 #import "Search.h"
 
+#import "DetailViewController.h"
+
 
 @interface LandscapeViewController ()<UIScrollViewDelegate>
 
@@ -153,6 +155,11 @@
 
         button.frame = CGRectMake(x + marginHorz, 20.0f + row*itemHeight + marginVert, buttonWidth, buttonHeight);
         
+        //to show detailview in landscape mode
+        button.tag = 2000 + index;
+        [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
         [self.scrollView addSubview:button];
         
         //to import images on UIButton
@@ -184,6 +191,17 @@
     self.pageControl.numberOfPages = numPages;
     self.pageControl.currentPage = 0;
 }
+
+- (void)buttonPressed:(UIButton *)sender
+{
+    DetailViewController *controller = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    
+    SearchResult *searchResult = self.search.searchResults[sender.tag - 2000];
+    controller.searchResult = searchResult;
+    [controller presentInParentViewController:self];
+    
+}
+
 
 
 //UIScrollViewDelegate method
