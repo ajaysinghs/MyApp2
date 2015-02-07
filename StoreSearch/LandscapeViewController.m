@@ -62,6 +62,9 @@
             if (self.search.isLoading) {
                 [self showSpinner];
             }
+            else if ([self.search.searchResults count] == 0) {
+                [self showNothingFoundLabel];
+            }
             else {
                 [self tileButtons];
             }
@@ -86,12 +89,35 @@
 - (void)searchResultsReceived
 {
     [self hideSpinner];
+    
+    if([self.search.searchResults count] == 0){
+        [self showNothingFoundLabel];
+    }
+    else {
     [self tileButtons];
+    }
 }
+
 
 -(void)hideSpinner
 {
     [[self.view viewWithTag:1000] removeFromSuperview];
+}
+
+- (void)showNothingFoundLabel
+{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.text = @"Nothing Found";
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor whiteColor];
+    
+    [label sizeToFit];
+    CGRect rect = label.frame;
+    rect.size.width = ceilf(rect.size.width/2.0f) * 2.0f;
+    rect.size.height = ceilf(rect.size.height/2.0f) * 2.0f;
+    label.frame = rect;
+    label.center = CGPointMake(CGRectGetMidX(self.scrollView.bounds), CGRectGetMidY(self.scrollView.bounds));
+    [self.view addSubview:label];
 }
 
 - (void)tileButtons
