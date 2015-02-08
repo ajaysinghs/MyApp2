@@ -16,8 +16,12 @@
 
 #import "GradientView.h"
 
+#import "MenuViewController.h"
 
-@interface DetailViewController () <UIGestureRecognizerDelegate>
+#import <MessageUI/MessageUI.h>
+
+
+@interface DetailViewController () <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIView *popupView;
 
@@ -33,6 +37,10 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *priceButton;
 
+@property (nonatomic, strong) UIPopoverController *masterPopoverController;
+
+@property (nonatomic, strong) UIPopoverController *menuPopoverController;
+
 
 
 @end
@@ -46,8 +54,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
     
     //for Gradient not to be so dark
     self.view.backgroundColor = [UIColor clearColor];
@@ -67,13 +73,27 @@
     self.popupView.layer.cornerRadius = 10.0f;
     
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"LandscapeBackground"]];
+        self.popupView.hidden = (self.searchResult == nil);
+        //self.title = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+        self.title = @"Store Search";
+        
+        //to add BarButtonItem for email option in ipad
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                                                  target:self
+                                                  action:@selector(menuButtonPressed:)];
+    }
+    else {
     //adding Tap gesture recognizer
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(close:)];
     gestureRecognizer.cancelsTouchesInView = NO;
     gestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:gestureRecognizer];
+        self.view.backgroundColor = [UIColor clearColor];
     
-    
+    }
     if (self.searchResult != nil) {
         [self updateUI];
     }
@@ -82,8 +102,6 @@
 
 - (void)updateUI
 {
-   
-    
     self.nameLabel.text = self.searchResult.name;
     
     NSString *artistName = self.searchResult.artistName;
@@ -115,10 +133,12 @@
     
     [self.priceButton setTitle:priceText forState:UIControlStateNormal];
     
-    
-   
-    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        self.popupView.hidden = NO;
+        [self.masterPopoverController dismissPopoverAnimated:YES];
+    }
 }
+
 
 
 //This only returns YES when the touch was on the background view but NO if it was inside the Popup View.
@@ -138,7 +158,7 @@
 
 
 
-- (void)presentInParentViewController:(UIViewController *)parentViewController;
+- (void)presentInParentViewController:(UIViewController *)parentViewController
 {
     
     _gradientView = [[GradientView alloc] initWithFrame:parentViewController.view.bounds];
@@ -181,7 +201,7 @@
 
 
 
-- (void)dismissFromParentViewControllerWithAnimationType: (DetailViewControllerAnimationType)animationType;
+- (void)dismissFromParentViewControllerWithAnimationType: (DetailViewControllerAnimationType)animationType
 {
    [self willMoveToParentViewController:nil];
     
@@ -235,14 +255,117 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+// to update the contents of the labels in DetailViewController (for ipad)
+-(void)setSearchResult:(SearchResult *)newSearchResult
+{
+    if (_searchResult != newSearchResult) {
+        _searchResult = newSearchResult;
+        
+        if ([self isViewLoaded]) {
+            [self updateUI];
+        }
+    }
 }
-*/
+
+
+//method to show email button option in ipad
+-(void)menuButtonPressed:(UIBarButtonItem *)sender
+{
+    if ([self.menuPopoverController isPopoverVisible]) {
+        [self.menuPopoverController dismissPopoverAnimated:YES];
+    }
+    else {
+    [self.menuPopoverController
+          presentPopoverFromBarButtonItem:sender
+          permittedArrowDirections:UIPopoverArrowDirectionAny
+          animated:YES];
+    }
+}
+
+-(UIPopoverController *)menuPopoverController
+{
+    if (_menuPopoverController == nil) {
+        MenuViewController *menuViewController = [[MenuViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        
+        menuViewController.detailViewController = self;
+        
+        _menuPopoverController = [[UIPopoverController alloc] initWithContentViewController:menuViewController];
+    }
+    
+    return _menuPopoverController;
+}
+
+-(void)sendSupportEmail
+{
+    [self.menuPopoverController dismissPopoverAnimated:YES];
+    
+    MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+    
+    if (controller != nil) {
+        [controller setSubject:NSLocalizedString(@"Support Request", @"Email subject")];
+        [controller setToRecipients:@[@"ajayxsingh@gmail.com"]];
+        [self presentViewController:controller animated:YES completion:nil];
+        controller.mailComposeDelegate = self;
+        
+        controller.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller
+         didFinishWithResult:(MFMailComposeResult)result
+                       error:(NSError *)error
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+#pragma mark - UISplitViewControllerDelegate
+
+-(void)splitViewController:(UISplitViewController *)splitViewController
+    willHideViewController:(UIViewController *)viewController
+         withBarButtonItem:(UIBarButtonItem *)barButtonItem
+      forPopoverController:(UIPopoverController *)popoverController
+{
+    barButtonItem.title = NSLocalizedString(@"Search", @"Split-view master button");
+    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    self.masterPopoverController = popoverController;
+}
+
+
+-(void)splitViewController:(UISplitViewController *)splitViewController
+    willShowViewController:(UIViewController *)viewController
+ invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+    self.masterPopoverController = nil;
+}
+
+
+-(void)splitViewController:(UISplitViewController *)splitViewController
+         popoverController:(UIPopoverController *)popoverController
+ willPresentViewController:(UIViewController *)viewController
+{
+    if ([self.menuPopoverController isPopoverVisible]) {
+        [self.menuPopoverController dismissPopoverAnimated:YES];
+    }
+}
+
+
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+

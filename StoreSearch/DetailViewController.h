@@ -16,13 +16,14 @@ typedef NS_ENUM(NSUInteger, DetailViewControllerAnimationType){
     
 };
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
 
 @property (nonatomic, strong) SearchResult *searchResult;
 
 - (void)presentInParentViewController:(UIViewController *)parentViewController;
 
-
 - (void)dismissFromParentViewControllerWithAnimationType: (DetailViewControllerAnimationType)animationType;
+
+- (void)sendSupportEmail;
 
 @end

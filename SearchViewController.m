@@ -59,7 +59,6 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     
     UIStatusBarStyle _statusBarStyle;
     
-     __weak DetailViewController *_detailViewController;
 }
 
 
@@ -100,10 +99,11 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     cellnib = [UINib nibWithNibName:LoadingCellIdentifier bundle:nil];
     [self.tableView registerNib:cellnib forCellReuseIdentifier:LoadingCellIdentifier];
     
-    [self.searchBar becomeFirstResponder];
-    
     _statusBarStyle = UIStatusBarStyleDefault;
     
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+    [self.searchBar becomeFirstResponder];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -172,21 +172,26 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
     
     [self.searchBar resignFirstResponder];
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    DetailViewController *controller = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
-    
     
     // to set the properties of Detail View Controller
     SearchResult *searchResult = _search.searchResults[indexPath.row];
+    
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    DetailViewController *controller = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
     controller.searchResult = searchResult;
     
     [controller presentInParentViewController:self];
     
-    //to dismiss detailviewcontroller in landscape mode
-    _detailViewController = controller;
+    self.detailViewController = controller;
+    }
+    else {
+        self.detailViewController.searchResult = searchResult;
+    }
     
-    
+}
+
 //    //Before you add its view to the window,  resize it to the proper dimensions (e.g After you instantiate the DetailViewController it always has a view that is 568 points high, even on a 3.5-inch device.)
 //    controller.view.frame = self.view.frame;
 //    //Using the view controller containment APIs to embed the DetailViewController “inside” the SearchViewController.
@@ -195,7 +200,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 //    [controller didMoveToParentViewController:self];
     
     
-}
+
 
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -409,17 +414,20 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
 }
 
 
-//change to landscapemode
+//change to landscape mode
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
+    if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+        
     if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         
        [self hideLandscapeViewWithDuration:duration];
     }
     else{
         [self showLandscapeViewWithDuration:duration];
+    }
     }
 }
 
@@ -453,7 +461,7 @@ static NSString * const LoadingCellIdentifier = @"LoadingCell";
         
         [self.searchBar resignFirstResponder];
         
-        [_detailViewController dismissFromParentViewControllerWithAnimationType:DetailViewControllerAnimationTypeFade];
+        [self.detailViewController dismissFromParentViewControllerWithAnimationType:DetailViewControllerAnimationTypeFade];
         
     }
 }

@@ -2,10 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Default-568h@2x.png",
-      "unassigned" : true,
-      "subtype" : "retina4",
-      "scale" : "2x"
+      "scale" : "1x",
+      "filename" : "Default-568h@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x",
+      "filename" : "Default@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

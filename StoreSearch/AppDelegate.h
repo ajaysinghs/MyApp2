@@ -16,6 +16,8 @@
 
 @property (strong, nonatomic) SearchViewController *searchViewController;
 
+@property (strong, nonatomic) UISplitViewController *splitViewController;
+
 
 @end
 

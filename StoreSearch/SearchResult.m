@@ -12,7 +12,7 @@
 @implementation SearchResult
 
 
-- (NSComparisonResult)compareName:(SearchResult *)other;
+- (NSComparisonResult)compareName:(SearchResult *)other
 {
     return [self.name localizedStandardCompare:other.name];
 }
